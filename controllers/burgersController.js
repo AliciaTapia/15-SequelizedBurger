@@ -1,51 +1,48 @@
 
 var express = require("express");
 var router = express.Router();
-var burger = require("../models/burger.js");
+var db = require("../models");
 
-
-/**
- *  Portfolio Controller for the following routes
- *   app.get("/", router.get );
- *   app.get("/burgers", router.get );
- *   app.get("/burgers/create", router.post);
- *   app.get("/burgers/update", router.put);
- *   
- */
-
-
-// get route -> index
+//get route -> index
 router.get("/", function(req, res) {
   res.redirect("/burgers");
 });
 
 router.get("/burgers", function(req, res) {
   // express callback response by calling burger.selectAllBurger
-  burger.all(function(burgerData) {
-    // wrapper for orm.js that using MySQL query callback will return burger_data, render to index with handlebar
-    res.render("index", { burger_data: burgerData });
+  db.burger.findAll({}).then(function(burgerData) {
+    // dentro del ({}) puedes poner una condicion ... 
+    res.render("index.handlebars", { burger_data: burgerData });
   });
 });
 
 // post route -> back to index
 router.post("/burgers/create", function(req, res) {
   // takes the request object using it as input for buger.addBurger
-  burger.create(req.body.burger_name, function(result) {
-    // wrapper for orm.js that using MySQL insert callback will return a log to console,
-    // render back to index with handle
-    console.log(result);
-    res.redirect("/");
-  });
-});
+  db.burger.create({
 
-// put route -> back to index
-router.put("/burgers/update", function(req, res) {
-  burger.update(req.body.burger_id, function(result) {
-    // wrapper for orm.js that using MySQL update callback will return a log to console,
-    // render back to index with handle
-    console.log(result);
-    res.redirect("/");
+    burger_name: req.body.burger_name,
+    devoured:"false"
+
+  }).then(function(result){
+    response.redirect('/burgers')
   });
 });
+    
+// put route -> back to index
+router.put("/burgers/:update", function(req, res) {
+  db.burger.update({
+
+    devoured:req.body.burger_id
+  },{
+    where:{
+      id: req.params.update
+    }
+
+  }).then(function(result){
+    response.redirect('/burgers')
+  });
+});
+    
 
 module.exports = router;

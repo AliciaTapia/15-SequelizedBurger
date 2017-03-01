@@ -20,20 +20,16 @@ app.set("view engine", "handlebars");
 var routes = require("./controllers/burgersController.js");
 
 app.use("/", routes);
-app.use("/update", routes);
-app.use("/create", routes);
+
 
 //Database config ---------------------------------------/
 global.db = require('./models');
 
 // Syncing our sequelize models and then starting our express app
-db.sequelize.sync({ force: true }).then(function() {
+db.sequelize.sync({}).then(function() {
   app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });
 });
 
 
-app.listen(PORT, function() {
-  console.log("Listening on port:%s", PORT);
-});
