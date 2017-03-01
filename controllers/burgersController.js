@@ -25,7 +25,7 @@ router.post("/burgers/create", function(req, res) {
     devoured:"false"
 
   }).then(function(result){
-    response.redirect('/burgers')
+    res.redirect('/burgers')
   });
 });
     
@@ -40,7 +40,7 @@ router.put("/burgers/:update", function(req, res) {
     }
 
   }).then(function(result){
-    response.redirect('/burgers')
+    res.redirect('/burgers')
   });
 });
     
